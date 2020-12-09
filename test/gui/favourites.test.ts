@@ -1,5 +1,5 @@
 import * as global from '../../global.conf';
-import { sandboxEndpoint } from '../../data/endpoints.json';
+import { sandboxHomePage } from '../../data/endpoints.json';
 import { Browser, Page } from 'playwright';
 import { HomePage } from '../../page/home.page';
 
@@ -18,7 +18,7 @@ describe('Add, update, and remove favourites from a user\'s account', () => {
   it('clicking the Favourites menu item should redirect to login if user is not logged in', async () => {
     const homePage: HomePage = new HomePage(page);
 
-    await homePage.goToHomePage('https://www.tmsandbox.co.nz/');
+    await homePage.goToHomePage(sandboxHomePage);
     await homePage.clickFavouritesHeader();
 
     expect(await homePage.getLoginMessageText()).to.contain('Log in to continue');

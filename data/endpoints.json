@@ -1,3 +1,4 @@
 {
-    "sandboxEndpoint": "https://api.tmsandbox.co.nz/v1"
+    "sandboxEndpoint": "https://api.tmsandbox.co.nz/v1",
+    "sandboxHomePage": "https://www.tmsandbox.co.nz/"
 }
