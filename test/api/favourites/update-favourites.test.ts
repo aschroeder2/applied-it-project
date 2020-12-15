@@ -91,7 +91,7 @@ describe('Update favourite categories saved to a user account', () => {
   });
 });
 
-describe.only('A favourite saved to a user account can be updated to any email frequency', () => {
+describe('A favourite saved to a user account can be updated to any email frequency', () => {
 
   afterEach(async function() {
     await cleanUpCategoryFavourite();
