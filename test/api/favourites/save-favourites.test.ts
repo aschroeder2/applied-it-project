@@ -56,7 +56,7 @@ describe('Save favourite searches to a user account', () => {
   });
 });
 
-describe.only('Save favourite sellers to a user account', () => {
+describe('Save favourite sellers to a user account', () => {
 
   afterEach(function() {
     cleanUpSellerFavourite();
@@ -101,6 +101,52 @@ describe.only('Save favourite sellers to a user account', () => {
   });
 });
 
+describe('Save favourite categories to a user account', () => {
+
+  afterEach(function() {
+    cleanUpCategoryFavourite();
+  });
+
+  it('should successfully save a category with a valid category id', async () => {
+    const request = {
+      "Email": 0,
+      "CategoryId": 9201
+    };
+    const addCategoryResponse = await favouritesUtils.addFavourite(request, sandboxEndpoint, sandboxUser, 'Category');
+
+    expect(addCategoryResponse.Saved).to.be.true;
+    expect(addCategoryResponse.FavouriteType).to.equal(1);
+    expect(addCategoryResponse.Response).to.equal('OK');
+  });
+
+  it('should return a 400 response when an invalid category id is provided', async () => {
+    await request(sandboxEndpoint)
+      .post('/Favourites/Category.json')
+      .send({
+        'Email': 0,
+        "CategoryId": 123456789
+      })
+      .set('Authorization', `OAuth oauth_consumer_key="${sandboxUser.consumerKey}", oauth_token="${sandboxUser.oAuthToken}", oauth_signature_method="PLAINTEXT", oauth_signature="${sandboxUser.consumerSecret}&${sandboxUser.oAuthTokenSecret}"`)
+      .redirects()
+      .expect(400)
+  });
+
+  it('should return message that category is already saved when the same category id is sent twice', async () => {
+    const request = {
+      "Email": 0,
+      "CategoryId": 9201
+    };
+    const addCategoryResponse = await favouritesUtils.addFavourite(request, sandboxEndpoint, sandboxUser, 'Category');
+    expect(addCategoryResponse.Saved).to.be.true;
+
+    await new Promise(resolve => setTimeout(resolve, 4000))
+
+    const secondAddCategoryResponse = await favouritesUtils.addFavourite(request, sandboxEndpoint, sandboxUser, 'Category');
+    expect(secondAddCategoryResponse.Saved).to.be.true;
+    expect(secondAddCategoryResponse.Response).to.equal('You are already subscribed to this category');
+  });
+});
+
 async function cleanUpSearchFavourite() {
   const allSearchFavourites = await favouritesUtils.getSearchFavouritesList(sandboxEndpoint, 'Property', sandboxUser);
 
@@ -108,15 +154,25 @@ async function cleanUpSearchFavourite() {
     const favouriteId = favouriteSearch.FavouriteId;
 
     favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteId, 'AttributeSearch', sandboxUser);
-  })
-}
+  });
+};
 
 async function cleanUpSellerFavourite() {
-  const allSellerFavourites = await favouritesUtils.getSellerhFavouritesList(sandboxEndpoint, sandboxUser);
+  const allSellerFavourites = await favouritesUtils.getSellerFavouritesList(sandboxEndpoint, sandboxUser);
 
   allSellerFavourites.forEach( (favouriteSearch) => {
     const favouriteId = favouriteSearch.FavouriteId;
 
     favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteId, 'Seller', sandboxUser);
-  })
-}
+  });
+};
+
+async function cleanUpCategoryFavourite() {
+  const allSellerFavourites = await favouritesUtils.getCategoryFavouritesList(sandboxEndpoint, sandboxUser);
+
+  allSellerFavourites.forEach( (favouriteSearch) => {
+    const favouriteId = favouriteSearch.FavouriteId;
+
+    favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteId, 'Category', sandboxUser);
+  });
+};
