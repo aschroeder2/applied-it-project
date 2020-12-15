@@ -1,5 +1,5 @@
-import * as global from '../../global.conf';
-import { sandboxEndpoint } from '../../data/endpoints.json';
+import * as global from '../../../global.conf';
+import { sandboxEndpoint } from '../../../data/endpoints.json';
 
 const request = global.request;
 const expect = global.chai.expect;

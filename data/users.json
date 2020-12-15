@@ -1,0 +1,10 @@
+{
+  "sandboxUser": {
+    "email": "trademe.test.login@gmail.com",
+    "password": "Trade-Me1234",
+    "consumerKey": "55B545DD6F7FAF4D5FB85C634862D3D5",
+    "consumerSecret": "535EC9322B0EC0D8F017176F8DBE1F4B",
+    "oAuthToken": "5B7D6C15389634F3D6B0A0CA1486F04F",
+    "oAuthTokenSecret": "39EAF9B419F2BCE62338BF5379517B58"
+  }
+}
