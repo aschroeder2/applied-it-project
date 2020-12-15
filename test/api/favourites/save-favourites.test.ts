@@ -9,15 +9,114 @@ const favouritesUtils = new FavouritesUtils();
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-describe.only('Save favourite searches to a user account', () => {
+describe('Save favourite searches to a user account', () => {
+
+  afterEach(function() {
+    cleanUpSearchFavourite();
+  });
+
   it('should successfully save a search with a valid search string', async () => {
     const request = {
           'Email': 0,
           'SearchString': 'category=3399&region=15&district=43&sort_order=PropertyFeature',
           'Type': 4
         };
-    const addSearchResponse = await favouritesUtils.addSearchFavourite(request, sandboxEndpoint, sandboxUser);
+    const addSearchResponse = await favouritesUtils.addFavourite(request, sandboxEndpoint, sandboxUser, 'Search');
 
     expect(addSearchResponse.Saved).to.be.true;
   });
+
+  it('should return a 400 response when an invalid search type is provided', async () => {
+    await request(sandboxEndpoint)
+      .post('/Favourites/Search.json')
+      .send({
+        'Email': 0,
+        'SearchString': '',
+        'Type': 123456789
+      })
+      .set('Authorization', `OAuth oauth_consumer_key="${sandboxUser.consumerKey}", oauth_token="${sandboxUser.oAuthToken}", oauth_signature_method="PLAINTEXT", oauth_signature="${sandboxUser.consumerSecret}&${sandboxUser.oAuthTokenSecret}"`)
+      .redirects()
+      .expect(400)
+  });
+
+  it('should return message that search is already saved when the same search string is sent twice', async () => {
+    const request = {
+          'Email': 0,
+          'SearchString': 'category=3399&region=15&district=43&sort_order=PropertyFeature',
+          'Type': 4
+        };
+    const addSearchResponse = await favouritesUtils.addFavourite(request, sandboxEndpoint, sandboxUser, 'Search');
+    expect(addSearchResponse.Saved).to.be.true;
+
+    await new Promise(resolve => setTimeout(resolve, 4000))
+
+    const secondAddSearchResponse = await favouritesUtils.addFavourite(request, sandboxEndpoint, sandboxUser, 'Search');
+    expect(secondAddSearchResponse.Saved).to.be.true;
+    expect(secondAddSearchResponse.Response).to.equal('You are already subscribed to this search');
+  });
 });
+
+describe.only('Save favourite sellers to a user account', () => {
+
+  afterEach(function() {
+    cleanUpSellerFavourite();
+  });
+
+  it('should successfully save a seller with a valid seller id', async () => {
+    const request = {
+          'Email': 1,
+          "SellerId": 4005383,
+        };
+    const addSellerResponse = await favouritesUtils.addFavourite(request, sandboxEndpoint, sandboxUser, 'Seller');
+
+    expect(addSellerResponse.Saved).to.be.true;
+    expect(addSellerResponse.FavouriteType).to.equal(6);
+    expect(addSellerResponse.Response).to.equal('OK');
+  });
+
+  it('should return a no such member message when an invalid seller id is provided', async () => {
+    const request = {
+      'Email': 1,
+      "SellerId": 0,
+    };
+    const addSellerResponse = await favouritesUtils.addFavourite(request, sandboxEndpoint, sandboxUser, 'Seller');
+
+    expect(addSellerResponse.Saved).to.be.false;
+    expect(addSellerResponse.Response).to.equal('ERROR no such member');
+  });
+
+  it('should return message that seller is already saved when the same sellerId is sent twice', async () => {
+    const request = {
+      'Email': 1,
+      "SellerId": 4005383,
+    };
+    const addSellerResponse = await favouritesUtils.addFavourite(request, sandboxEndpoint, sandboxUser, 'Seller');
+    expect(addSellerResponse.Saved).to.be.true;
+
+    await new Promise(resolve => setTimeout(resolve, 4000))
+
+    const secondAddSellerResponse = await favouritesUtils.addFavourite(request, sandboxEndpoint, sandboxUser, 'Seller');
+    expect(secondAddSellerResponse.Saved).to.be.true;
+    expect(secondAddSellerResponse.Response).to.equal('You are already subscribed to this seller.');
+  });
+});
+
+async function cleanUpSearchFavourite() {
+  const allSearchFavourites = await favouritesUtils.getSearchFavouritesList(sandboxEndpoint, 'Property', sandboxUser);
+
+  allSearchFavourites.forEach( (favouriteSearch) => {
+    const favouriteId = favouriteSearch.FavouriteId;
+
+    favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteId, 'AttributeSearch', sandboxUser);
+  })
+}
+
+async function cleanUpSellerFavourite() {
+  const allSellerFavourites = await favouritesUtils.getSellerhFavouritesList(sandboxEndpoint, sandboxUser);
+
+  allSellerFavourites.forEach( (favouriteSearch) => {
+    const favouriteId = favouriteSearch.FavouriteId;
+
+    favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteId, 'Seller', sandboxUser);
+  })
+}
