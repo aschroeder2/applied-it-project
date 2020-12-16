@@ -222,29 +222,23 @@ describe('A favourite saved to a user account can be updated to any email freque
 async function cleanUpSearchFavourite() {
   const allSearchFavourites = await favouritesUtils.getSearchFavouritesList(sandboxEndpoint, 'Property', sandboxUser);
 
-  await allSearchFavourites.forEach( (favouriteSearch) => {
-    const favouriteId = favouriteSearch.FavouriteId;
-
-    favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteId, 'AttributeSearch', sandboxUser);
-  });
+  for (const favouriteSearch of allSearchFavourites) {
+    await favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteSearch.FavouriteId, 'AttributeSearch', sandboxUser);
+  };
 };
 
 async function cleanUpSellerFavourite() {
   const allSellerFavourites = await favouritesUtils.getSellerFavouritesList(sandboxEndpoint, sandboxUser);
 
-  await allSellerFavourites.forEach( (favouriteSearch) => {
-    const favouriteId = favouriteSearch.FavouriteId;
-
-    favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteId, 'Seller', sandboxUser);
-  });
+  for (const favouriteSearch of allSellerFavourites) {
+    await favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteSearch.FavouriteId, 'Seller', sandboxUser);
+  };
 };
 
 async function cleanUpCategoryFavourite() {
-  const allSellerFavourites = await favouritesUtils.getCategoryFavouritesList(sandboxEndpoint, sandboxUser);
+  const allCategoryFavourites = await favouritesUtils.getCategoryFavouritesList(sandboxEndpoint, sandboxUser);
 
-  await allSellerFavourites.forEach( (favouriteSearch) => {
-    const favouriteId = favouriteSearch.FavouriteId;
-
-    favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteId, 'Category', sandboxUser);
-  });
+  for (const favouriteSearch of allCategoryFavourites) {
+    await favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteSearch.FavouriteId, 'Category', sandboxUser);
+  };
 };

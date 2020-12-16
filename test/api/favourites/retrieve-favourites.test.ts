@@ -198,19 +198,15 @@ async function cleanUpSearchFavourite() {
 async function cleanUpSellerFavourite() {
   const allSellerFavourites = await favouritesUtils.getSellerFavouritesList(sandboxEndpoint, sandboxUser);
 
-  await allSellerFavourites.forEach( async (favouriteSearch) => {
-    const favouriteId = favouriteSearch.FavouriteId;
-
-    await favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteId, 'Seller', sandboxUser);
-  });
+  for (const favouriteSearch of allSellerFavourites) {
+    await favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteSearch.FavouriteId, 'Seller', sandboxUser);
+  };
 };
 
 async function cleanUpCategoryFavourite() {
-  const allSellerFavourites = await favouritesUtils.getCategoryFavouritesList(sandboxEndpoint, sandboxUser);
+  const allCategoryFavourites = await favouritesUtils.getCategoryFavouritesList(sandboxEndpoint, sandboxUser);
 
-  await allSellerFavourites.forEach( async (favouriteSearch) => {
-    const favouriteId = favouriteSearch.FavouriteId;
-
-    await favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteId, 'Category', sandboxUser);
-  });
+  for (const favouriteSearch of allCategoryFavourites) {
+    await favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteSearch.FavouriteId, 'Category', sandboxUser);
+  };
 };
