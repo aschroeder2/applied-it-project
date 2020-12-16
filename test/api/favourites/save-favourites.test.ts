@@ -11,8 +11,8 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 describe('Save favourite searches to a user account', () => {
 
-  afterEach(function() {
-    cleanUpSearchFavourite();
+  afterEach(async function() {
+    await cleanUpSearchFavourite();
   });
 
   it('should successfully save a search with a valid search string', async () => {
@@ -58,8 +58,8 @@ describe('Save favourite searches to a user account', () => {
 
 describe('Save favourite sellers to a user account', () => {
 
-  afterEach(function() {
-    cleanUpSellerFavourite();
+  afterEach(async function() {
+    await cleanUpSellerFavourite();
   });
 
   it('should successfully save a seller with a valid seller id', async () => {
@@ -103,8 +103,8 @@ describe('Save favourite sellers to a user account', () => {
 
 describe('Save favourite categories to a user account', () => {
 
-  afterEach(function() {
-    cleanUpCategoryFavourite();
+  afterEach(async function() {
+    await cleanUpCategoryFavourite();
   });
 
   it('should successfully save a category with a valid category id', async () => {
@@ -150,7 +150,7 @@ describe('Save favourite categories to a user account', () => {
 async function cleanUpSearchFavourite() {
   const allSearchFavourites = await favouritesUtils.getSearchFavouritesList(sandboxEndpoint, 'Property', sandboxUser);
 
-  allSearchFavourites.forEach( (favouriteSearch) => {
+  await allSearchFavourites.forEach( (favouriteSearch) => {
     const favouriteId = favouriteSearch.FavouriteId;
 
     favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteId, 'AttributeSearch', sandboxUser);
@@ -160,7 +160,7 @@ async function cleanUpSearchFavourite() {
 async function cleanUpSellerFavourite() {
   const allSellerFavourites = await favouritesUtils.getSellerFavouritesList(sandboxEndpoint, sandboxUser);
 
-  allSellerFavourites.forEach( (favouriteSearch) => {
+  await allSellerFavourites.forEach( (favouriteSearch) => {
     const favouriteId = favouriteSearch.FavouriteId;
 
     favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteId, 'Seller', sandboxUser);
@@ -170,7 +170,7 @@ async function cleanUpSellerFavourite() {
 async function cleanUpCategoryFavourite() {
   const allSellerFavourites = await favouritesUtils.getCategoryFavouritesList(sandboxEndpoint, sandboxUser);
 
-  allSellerFavourites.forEach( (favouriteSearch) => {
+  await allSellerFavourites.forEach( (favouriteSearch) => {
     const favouriteId = favouriteSearch.FavouriteId;
 
     favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteId, 'Category', sandboxUser);

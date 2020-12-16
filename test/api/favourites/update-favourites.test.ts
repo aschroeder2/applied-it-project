@@ -11,8 +11,8 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 describe('Update favourite searches saved to a user account', () => {
 
-  afterEach(function() {
-    cleanUpSearchFavourite();
+  afterEach(async function() {
+    await cleanUpSearchFavourite();
   });
 
   it('should successfully update the email frequency for a favourited search', async () => {
@@ -26,6 +26,7 @@ describe('Update favourite searches saved to a user account', () => {
     expect(addSearchResponse.Saved).to.be.true;
 
     let favouritedSearchDetails = await favouritesUtils.getSearchFavouritesList(sandboxEndpoint, 'Property', sandboxUser);
+    await new Promise(resolve => setTimeout(resolve, 2000));
     const favouriteId = favouritedSearchDetails[0].FavouriteId
 
     expect(favouritedSearchDetails[0].EmailOptions).to.equal(0);
@@ -39,8 +40,8 @@ describe('Update favourite searches saved to a user account', () => {
 
 describe('Update favourite sellers saved to a user account', () => {
 
-  afterEach(function() {
-    cleanUpSellerFavourite();
+  afterEach(async function() {
+    await cleanUpSellerFavourite();
   });
 
   it('should successfully update the email frequency for a favourited seller', async () => {
@@ -53,6 +54,7 @@ describe('Update favourite sellers saved to a user account', () => {
     expect(addSellerResponse.Saved).to.be.true;
 
     let favouritedSellerDetails = await favouritesUtils.getSellerFavouritesList(sandboxEndpoint, sandboxUser);
+    await new Promise(resolve => setTimeout(resolve, 2000));
     const favouriteId = favouritedSellerDetails[0].FavouriteId
 
     expect(favouritedSellerDetails[0].EmailOptions).to.equal(1);
@@ -66,8 +68,8 @@ describe('Update favourite sellers saved to a user account', () => {
 
 describe('Update favourite categories saved to a user account', () => {
 
-  afterEach(function() {
-    cleanUpCategoryFavourite();
+  afterEach(async function() {
+    await cleanUpCategoryFavourite();
   });
 
   it('should successfully update the email frequency for a favourited category', async () => {
@@ -80,6 +82,7 @@ describe('Update favourite categories saved to a user account', () => {
     expect(addCategoryResponse.Saved).to.be.true;
 
     let favouritedCateogryDetails = await favouritesUtils.getCategoryFavouritesList(sandboxEndpoint, sandboxUser);
+    await new Promise(resolve => setTimeout(resolve, 2000));
     const favouriteId = favouritedCateogryDetails[0].FavouriteId
 
     expect(favouritedCateogryDetails[0].EmailOptions).to.equal(3);
@@ -107,6 +110,7 @@ describe('A favourite saved to a user account can be updated to any email freque
     expect(addCategoryResponse.Saved).to.be.true;
 
     let favouritedCateogryDetails = await favouritesUtils.getCategoryFavouritesList(sandboxEndpoint, sandboxUser);
+    await new Promise(resolve => setTimeout(resolve, 3000));
     const favouriteId = favouritedCateogryDetails[0].FavouriteId
 
     expect(favouritedCateogryDetails[0].EmailOptions).to.equal(3);
@@ -127,6 +131,7 @@ describe('A favourite saved to a user account can be updated to any email freque
     expect(addCategoryResponse.Saved).to.be.true;
 
     let favouritedCateogryDetails = await favouritesUtils.getCategoryFavouritesList(sandboxEndpoint, sandboxUser);
+    await new Promise(resolve => setTimeout(resolve, 2000));
     const favouriteId = favouritedCateogryDetails[0].FavouriteId
 
     expect(favouritedCateogryDetails[0].EmailOptions).to.equal(7);
@@ -147,6 +152,7 @@ describe('A favourite saved to a user account can be updated to any email freque
     expect(addCategoryResponse.Saved).to.be.true;
 
     let favouritedCateogryDetails = await favouritesUtils.getCategoryFavouritesList(sandboxEndpoint, sandboxUser);
+    await new Promise(resolve => setTimeout(resolve, 2000));
     const favouriteId = favouritedCateogryDetails[0].FavouriteId
 
     expect(favouritedCateogryDetails[0].EmailOptions).to.equal(0);
@@ -167,6 +173,7 @@ describe('A favourite saved to a user account can be updated to any email freque
     expect(addCategoryResponse.Saved).to.be.true;
 
     let favouritedCateogryDetails = await favouritesUtils.getCategoryFavouritesList(sandboxEndpoint, sandboxUser);
+    await new Promise(resolve => setTimeout(resolve, 2000));
     const favouriteId = favouritedCateogryDetails[0].FavouriteId
 
     expect(favouritedCateogryDetails[0].EmailOptions).to.equal(1);
@@ -198,6 +205,7 @@ describe('A favourite saved to a user account can be updated to any email freque
     expect(addCategoryResponse.Saved).to.be.true;
 
     let favouritedCateogryDetails = await favouritesUtils.getCategoryFavouritesList(sandboxEndpoint, sandboxUser);
+    await new Promise(resolve => setTimeout(resolve, 2000));
     const favouriteId = favouritedCateogryDetails[0].FavouriteId
 
     await request(sandboxEndpoint)
@@ -214,7 +222,7 @@ describe('A favourite saved to a user account can be updated to any email freque
 async function cleanUpSearchFavourite() {
   const allSearchFavourites = await favouritesUtils.getSearchFavouritesList(sandboxEndpoint, 'Property', sandboxUser);
 
-  allSearchFavourites.forEach( (favouriteSearch) => {
+  await allSearchFavourites.forEach( (favouriteSearch) => {
     const favouriteId = favouriteSearch.FavouriteId;
 
     favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteId, 'AttributeSearch', sandboxUser);
@@ -224,7 +232,7 @@ async function cleanUpSearchFavourite() {
 async function cleanUpSellerFavourite() {
   const allSellerFavourites = await favouritesUtils.getSellerFavouritesList(sandboxEndpoint, sandboxUser);
 
-  allSellerFavourites.forEach( (favouriteSearch) => {
+  await allSellerFavourites.forEach( (favouriteSearch) => {
     const favouriteId = favouriteSearch.FavouriteId;
 
     favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteId, 'Seller', sandboxUser);
@@ -234,7 +242,7 @@ async function cleanUpSellerFavourite() {
 async function cleanUpCategoryFavourite() {
   const allSellerFavourites = await favouritesUtils.getCategoryFavouritesList(sandboxEndpoint, sandboxUser);
 
-  allSellerFavourites.forEach( (favouriteSearch) => {
+  await allSellerFavourites.forEach( (favouriteSearch) => {
     const favouriteId = favouriteSearch.FavouriteId;
 
     favouritesUtils.deleteFavourite(sandboxEndpoint, favouriteId, 'Category', sandboxUser);
