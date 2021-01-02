@@ -1,4 +1,4 @@
-import { Page } from 'playwright';
+import { ElementHandle, Page } from 'playwright';
 
 export class HomePage {
 
@@ -18,5 +18,37 @@ export class HomePage {
 
   async getLoginMessageText(): Promise<string> {
     return await this.page.textContent('#LoginContinueHeading')
+  }
+
+  async clickLogin(): Promise<void> {
+    await this.page.click('#LoginLink')
+  }
+
+  async noSavedSearchesMessage(): Promise<string> {
+    return await this.page.textContent('#HaveNoSearchesDiv');
+  }
+
+  async noSavedCategoriesMessage(): Promise<string> {
+    return await this.page.textContent('#HaveNoCategoriesDiv');
+  }
+
+  async noSavedSellersMessage(): Promise<string> {
+    return await this.page.textContent('#HaveNoSellersDiv');
+  }
+
+  async switchToCategories(): Promise<void> {
+    await this.page.click('//button[contains(., "Categories")]')
+  }
+
+  async switchToSellers(): Promise<void> {
+    await this.page.click('//button[contains(., "Sellers")]')
+  }
+
+  async goToProperty(): Promise<void> {
+    await this.page.click('#SearchTabs1_PropertyLink')
+  }
+
+  async getFavouriteSearchTitle(): Promise<string> {
+    return await this.page.textContent('#favouriteTitle');
   }
 }

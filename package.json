@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "small project to demonstrate api and ui testing abilities",
     "scripts": {
-        "test": "mocha -r ts-node/register test/**/*.test.ts --reporter mochawesome --timeout 20000"
+        "test": "mocha -r ts-node/register test/**/*.test.ts --reporter mochawesome --timeout 40000"
     },
     "devDependencies": {
         "@types/chai": "^4.1.7",
