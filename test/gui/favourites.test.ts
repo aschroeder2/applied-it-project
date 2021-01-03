@@ -16,7 +16,7 @@ const { chromium } = require('playwright');
 let page: Page;
 let browser: Browser;
 
-describe.only('Add, update, and remove favourites from a user\'s account', () => {
+describe('Add, update, and remove favourites from a user\'s account', () => {
   const favouritesUtils: FavouritesUtils = new FavouritesUtils();
   let homePage: HomePage;
   let loginPage: LoginPage;

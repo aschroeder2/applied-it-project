@@ -9,7 +9,7 @@ const favouritesUtils = new FavouritesUtils();
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-describe('Retrieve search favourites for an user account', async () => {
+describe('Retrieve search favourites for a user account', async () => {
   afterEach(async function() {
     await cleanUpSearchFavourite();
   });
@@ -129,7 +129,7 @@ describe('Retrieve search favourites for an user account', async () => {
   });
 });
 
-describe('Retrieve seller favourites for an user account', () => {
+describe('Retrieve seller favourites for a user account', () => {
   afterEach(async function() {
     await cleanUpSellerFavourite();
   });
@@ -152,7 +152,7 @@ describe('Retrieve seller favourites for an user account', () => {
   });
 });
 
-describe('Retrieve category favourites for an user account', () => {
+describe('Retrieve category favourites for a user account', () => {
   afterEach(async function() {
     await cleanUpCategoryFavourite();
   });
