@@ -6,6 +6,9 @@ import { HomePage } from '../../page/home.page';
 import { LoginPage } from '../../page/login.page';
 import { PropertyPage } from '../../page/property.page'
 import { FavouritesUtils } from '../../utils/favourites.utils'
+import { MotorsPage } from '../../page/motors.page';
+import { SellerPage } from '../../page/seller.page';
+import { CategoryPage } from '../../page/category.page';
 
 const expect = global.chai.expect;
 const { chromium } = require('playwright');
@@ -90,22 +93,38 @@ describe.only('Add, update, and remove favourites from a user\'s account', () =>
     await propertyPage.saveFavouriteSearch();
     await homePage.clickFavouritesHeader();
     
-    expect(await homePage.getFavouriteSearchTitle()).to.contain('Rentals: Kapiti Coast, Wellington');    
+    expect(await homePage.getFavouriteTitle()).to.contain('Rentals: Kapiti Coast, Wellington');    
   });
 
-  it.only('a logged in user can successfully save a seller favourite', async () => {
-    const propertyPage: PropertyPage = new PropertyPage(page);
+  it('a logged in user can successfully save a seller favourite', async () => {
+    const motorsPage: MotorsPage = new MotorsPage(page);
+    const sellerPage: SellerPage = new SellerPage(page);
 
     await logInToTradeMeSite();
-    await homePage.goToProperty();
-    await propertyPage.selectToRentFilter();
-    await propertyPage.selectRegion('15');
-    await new Promise(resolve => setTimeout(resolve, 500))
-    await propertyPage.selectDistrict('43');
-    await propertyPage.clickSearchRentals();
-    await propertyPage.saveFavouriteSearch();
+    await homePage.goToMotors();
+    await motorsPage.clickCarsForSale();
+    await motorsPage.clickFirstCarListing();
+
+    const sellerName = await motorsPage.getSellerName();
+
+    await motorsPage.clickSellerName();
+    await sellerPage.saveThisSeller();
     await homePage.clickFavouritesHeader();
+    await homePage.switchToSellers();
     
-    expect(await homePage.getFavouriteSearchTitle()).to.contain('Rentals: Kapiti Coast, Wellington');    
+    expect(await homePage.getFavouriteTitle()).to.contain(sellerName);    
+  });
+
+  it.only('a logged in user can successfully save a category favourite', async () => {
+    const categoryPage: CategoryPage = new CategoryPage(page);
+
+    await logInToTradeMeSite();
+    await homePage.clickCategory('Antiques & collectables');
+    await categoryPage.clickSubcategory('Tools');
+    await categoryPage.favouriteSubcategory();
+    await homePage.clickFavouritesHeader();
+    await homePage.switchToCategories();
+    
+    expect(await homePage.getFavouriteTitle()).to.contain('Tools');    
   });
 });

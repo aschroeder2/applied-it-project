@@ -48,7 +48,15 @@ export class HomePage {
     await this.page.click('#SearchTabs1_PropertyLink')
   }
 
-  async getFavouriteSearchTitle(): Promise<string> {
+  async getFavouriteTitle(): Promise<string> {
     return await this.page.textContent('#favouriteTitle');
   }
+
+  async goToMotors(): Promise<void> {
+    await this.page.click('#SearchTabs1_MotorsLink');
+  }
+
+  async clickCategory(category: string): Promise<void> {
+    await this.page.click(`//div[@id = "main-box-categories"]//a[contains(., "${category}")]`)
+  } 
 }
