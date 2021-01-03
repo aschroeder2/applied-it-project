@@ -40,4 +40,17 @@ export class FavouritesPage {
   async selectCategoriesTab(): Promise<void> {
     await this.page.click('//a[contains(., "Categories")]');
   }
+
+  async removeFavourite(favouriteTitle: string): Promise<void> {
+    await this.page.waitForSelector('#favourites');
+    
+    const favouriteRow = await this.page.$(`//div[@id = "favourites"]//tr[contains(., "${favouriteTitle}")]`);
+    const removeLink = await favouriteRow.$('//a[contains(., "Remove")]');
+
+    await removeLink.click();
+  }
+
+  async favouritesTabSectionText(): Promise<string> {
+    return await this.page.textContent('#mainContent');
+  }
  }

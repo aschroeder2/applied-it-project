@@ -20,6 +20,7 @@ describe.only('Add, update, and remove favourites from a user\'s account', () =>
   const favouritesUtils: FavouritesUtils = new FavouritesUtils();
   let homePage: HomePage;
   let loginPage: LoginPage;
+  let favouritesPage: FavouritesPage;
 
   async function logInToTradeMeSite(): Promise<void> {
     await homePage.goToHomePage(sandboxHomePage);
@@ -51,6 +52,7 @@ describe.only('Add, update, and remove favourites from a user\'s account', () =>
     page = await browser.newPage();
     homePage = new HomePage(page);
     loginPage = new LoginPage(page);
+    favouritesPage = new FavouritesPage(page);
   });
 
   afterEach( async () => {
@@ -130,7 +132,6 @@ describe.only('Add, update, and remove favourites from a user\'s account', () =>
   });
 
   it('a logged in user can successfully update the email frequency for a saved search favourite', async () => {
-    const favouritesPage: FavouritesPage = new FavouritesPage(page);
     const request = {
       'Email': 0,
       'SearchString': 'category=3399&region=15&district=43&sort_order=PropertyFeature',
@@ -149,7 +150,6 @@ describe.only('Add, update, and remove favourites from a user\'s account', () =>
   });
 
   it('a logged in user can successfully update the email frequency for a saved seller favourite', async () => {
-    const favouritesPage: FavouritesPage = new FavouritesPage(page);
     const request = {
       'Email': 0,
       "SellerId": 4005383,
@@ -168,7 +168,6 @@ describe.only('Add, update, and remove favourites from a user\'s account', () =>
   });
 
   it('a logged in user can successfully update the email frequency for a saved category favourite', async () => {
-    const favouritesPage: FavouritesPage = new FavouritesPage(page);
     const addCategoryRequest = {
       "Email": 0,
       "CategoryId": 9205
@@ -184,5 +183,59 @@ describe.only('Add, update, and remove favourites from a user\'s account', () =>
     await page.reload();
 
     expect(await favouritesPage.getEmailFrequency('Nose')).to.contain('Email me once a week');    
+  });
+
+  it('a logged in user can successfully delete a saved search favourite', async () => {
+    const request = {
+      'Email': 0,
+      'SearchString': 'category=3399&region=15&district=43&sort_order=PropertyFeature',
+      'Type': 4
+    };
+    const addSearchResponse = await favouritesUtils.addFavourite(request, sandboxEndpoint, sandboxUser, 'Search');
+
+    expect(addSearchResponse.Saved).to.be.true;
+
+    await logInToTradeMeSite();
+    await favouritesPage.goToFavouritesPage();
+    await favouritesPage.removeFavourite('Property: Kapiti Coast, Wellington');
+    await page.reload();
+
+    expect(await favouritesPage.favouritesTabSectionText()).to.contain('You do not currently have any favourite searches saved.');    
+  });
+
+  it('a logged in user can successfully delete a saved seller favourite', async () => {
+    const request = {
+      'Email': 0,
+      "SellerId": 4005383,
+    };
+    const addSellerResponse = await favouritesUtils.addFavourite(request, sandboxEndpoint, sandboxUser, 'Seller');
+    
+    expect(addSellerResponse.Saved).to.be.true;
+
+    await logInToTradeMeSite();
+    await favouritesPage.goToFavouritesPage();
+    await favouritesPage.selectSellersTab();
+    await favouritesPage.removeFavourite('skylarc');
+    await page.reload();
+
+    expect(await favouritesPage.favouritesTabSectionText()).to.contain('You do not currently have any seller subscriptions saved.');    
+  });
+
+  it('a logged in user can successfully delete a saved category favourite', async () => {
+    const addCategoryRequest = {
+      "Email": 0,
+      "CategoryId": 9205
+    };
+    const addCategoryResponse = await favouritesUtils.addFavourite(addCategoryRequest, sandboxEndpoint, sandboxUser, 'Category');
+    
+    expect(addCategoryResponse.Saved).to.be.true;
+
+    await logInToTradeMeSite();
+    await favouritesPage.goToFavouritesPage();
+    await favouritesPage.selectCategoriesTab();
+    await favouritesPage.removeFavourite('Nose');
+    await page.reload();
+
+    expect(await favouritesPage.favouritesTabSectionText()).to.contain('You do not currently have any favourite categories saved.');    
   });
 });
