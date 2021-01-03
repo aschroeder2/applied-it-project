@@ -9,6 +9,7 @@ import { FavouritesUtils } from '../../utils/favourites.utils'
 import { MotorsPage } from '../../page/motors.page';
 import { SellerPage } from '../../page/seller.page';
 import { CategoryPage } from '../../page/category.page';
+import { FavouritesPage } from '../../page/favourites.page';
 
 const expect = global.chai.expect;
 const { chromium } = require('playwright');
@@ -115,7 +116,7 @@ describe.only('Add, update, and remove favourites from a user\'s account', () =>
     expect(await homePage.getFavouriteTitle()).to.contain(sellerName);    
   });
 
-  it.only('a logged in user can successfully save a category favourite', async () => {
+  it('a logged in user can successfully save a category favourite', async () => {
     const categoryPage: CategoryPage = new CategoryPage(page);
 
     await logInToTradeMeSite();
@@ -126,5 +127,62 @@ describe.only('Add, update, and remove favourites from a user\'s account', () =>
     await homePage.switchToCategories();
     
     expect(await homePage.getFavouriteTitle()).to.contain('Tools');    
+  });
+
+  it('a logged in user can successfully update the email frequency for a saved search favourite', async () => {
+    const favouritesPage: FavouritesPage = new FavouritesPage(page);
+    const request = {
+      'Email': 0,
+      'SearchString': 'category=3399&region=15&district=43&sort_order=PropertyFeature',
+      'Type': 4
+    };
+    const addSearchResponse = await favouritesUtils.addFavourite(request, sandboxEndpoint, sandboxUser, 'Search');
+
+    expect(addSearchResponse.Saved).to.be.true;
+
+    await logInToTradeMeSite();
+    await favouritesPage.goToFavouritesPage();
+    await favouritesPage.updateEmailFrequency('Property: Kapiti Coast, Wellington', 'Email me once a week');
+    await page.reload();
+
+    expect(await favouritesPage.getEmailFrequency('Property: Kapiti Coast, Wellington')).to.contain('Email me once a week');    
+  });
+
+  it('a logged in user can successfully update the email frequency for a saved seller favourite', async () => {
+    const favouritesPage: FavouritesPage = new FavouritesPage(page);
+    const request = {
+      'Email': 0,
+      "SellerId": 4005383,
+    };
+    const addSellerResponse = await favouritesUtils.addFavourite(request, sandboxEndpoint, sandboxUser, 'Seller');
+    
+    expect(addSellerResponse.Saved).to.be.true;
+
+    await logInToTradeMeSite();
+    await favouritesPage.goToFavouritesPage();
+    await favouritesPage.selectSellersTab();
+    await favouritesPage.updateEmailFrequency('skylarc', 'Email me once a week');
+    await page.reload();
+
+    expect(await favouritesPage.getEmailFrequency('skylarc')).to.contain('Email me once a week');    
+  });
+
+  it('a logged in user can successfully update the email frequency for a saved category favourite', async () => {
+    const favouritesPage: FavouritesPage = new FavouritesPage(page);
+    const addCategoryRequest = {
+      "Email": 0,
+      "CategoryId": 9205
+    };
+    const addCategoryResponse = await favouritesUtils.addFavourite(addCategoryRequest, sandboxEndpoint, sandboxUser, 'Category');
+    
+    expect(addCategoryResponse.Saved).to.be.true;
+
+    await logInToTradeMeSite();
+    await favouritesPage.goToFavouritesPage();
+    await favouritesPage.selectCategoriesTab();
+    await favouritesPage.updateEmailFrequency('Nose', 'Email me once a week');
+    await page.reload();
+
+    expect(await favouritesPage.getEmailFrequency('Nose')).to.contain('Email me once a week');    
   });
 });
