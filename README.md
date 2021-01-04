@@ -1,26 +1,26 @@
 # Applied It Project
 
 ## Overview
-This is a sample API testing project created for an Applied IT Project for Northern Arizona University. The tests are written in Typescript using the Mocha test framework, SuperTest designed for testing HTTP, and Playwright designed for testing user interfaces.
+This is a sample API testing project created for an Applied IT Project for Northern Arizona University. The tests are written against the TradeMe sandbox environment, exercising both TradeMe's API endpoints and sandbox website. To find out more about TradeMe's sandbox environment see their developer reference: https://developer.trademe.co.nz/. This repository specifically focuses on API and UI automated tests that validate TradeMe's favouriting functionality. 
 
 ## Language and Tools
 
 This project requires installation of Node.js and yarn as the recommended package manager. Yarn can then be used to install the remaining dependencies.
 
-#### Typescript
-Describe what Typescript is.
+#### TypeScript
+TypeScript is an open-source language that is a superset of JavaScript, extending it by adding types. Link to TypeScript's documentation: https://www.typescriptlang.org/. 
 
 #### Mocha
-Overall test framework used to organize and run the test scripts.
+Mocha is a JavaScript test framework that can be used to run both API and UI automated tests. Link to Mocha's documentation: https://mochajs.org/.
 
 #### Chai
-Assertion library used to validate test results.
+Chai is a BDD/TDD assertion library that can be used with any JavaScript testing framework. It provides validation methods for both API and UI tests. Link to Chai's documentation: https://www.chaijs.com/. 
 
 #### SuperTest
-API test automation framework.
+SuperTest is a JavaScript test automation framework that enables testing HTTP. Link to SuperTest's documentation: https://github.com/visionmedia/supertest#supertest. 
 
 #### Playwright
-UI test automation framework
+Playwright is a JavaScript user interface testing framework that enables automate test scripts to interact with browsers based on Chromium, Firefox, or WebKit. Link to Playwright's documentation: https://playwright.dev/.
 
 ## Set up
 Complete the following steps in order to set up your local environment to be able to run the tests within this repository.
@@ -66,13 +66,13 @@ npm run test
 
 #### How to run different sets of test cases
 If you want to run all of the automated tests in the repository, you only need to follow the above instructions. If you would like to run a subset of tests, this is accomplished by using Mocha's exclusivity feature. Here is the documentation about this feature: https://mochajs.org/#exclusive-tests.
-  * In order to run a suite of tests, add ".only" after the "describe" Mocha key word that contains the tests of interest.
-  * In order to run a single test or a custom set of tests, add ".only" after the "it" Mocha keyword for the test(s) of interest.
+  * In order to run a suite of tests, open the relevant test script file in your code editor (found under the /test directory), and add ".only" after the "describe" Mocha key word that contains the tests of interest.
+  * In order to run a single test or a custom set of tests, open the relevant test script file(s) in your code editor, and add ".only" after the "it" Mocha keyword for the test(s) of interest.
 
 ## Test reports
 This repository uses the mochawesome tool to create polished HTML reports that show the results of a test run. See the mochawesome tool details here: https://github.com/adamgruber/mochawesome. 
 
-After you run the tests for the first time, you will see a "mochawesome-report" director appear under the applied-it-project directory. Review the test report by opening the mochawesome.html file contained within this directory in your browser.
+After you run the tests for the first time, you will see a "mochawesome-report" directory appear under the applied-it-project directory. Review the test report by opening the mochawesome.html file contained within this directory in your browser.
 
 The mochawesome.html file is updated each time the tests are run. To preserve a specific report, rename the file before executing the tests again. For example, you can append a date time to the end ofthe report name, such as mochawesome_202101041708.html.
 
